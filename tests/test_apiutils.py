@@ -1,4 +1,4 @@
-import ConfigParser
+import configparser
 import hmac
 import uuid
 import os
@@ -68,7 +68,7 @@ def test_generate_headers_user_agent(mocked_ro_apikey):
 
 
 def test_get_valid_ro_apikey():
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
         ro_api_key = api_utils.get_ro_apikey()
 
         assert ro_api_key == ID_WITH_VALID_LENGTH
@@ -76,12 +76,12 @@ def test_get_valid_ro_apikey():
 
 def raise_no_option_error_on_read_only_key(*args):
     if args[1] == 'ro_api_key':
-        raise ConfigParser.NoOptionError('option', 'section')
+        raise configparser.NoOptionError('option', 'section')
     elif args[1] == 'rw_api_key':
         return ID_WITH_VALID_LENGTH
 
 
-@patch.object(ConfigParser.ConfigParser, 'get', side_effect=raise_no_option_error_on_read_only_key)
+@patch.object(configparser.ConfigParser, 'get', side_effect=raise_no_option_error_on_read_only_key)
 def test_get_rw_apikey_if_ro_apikey_not_present(mock_get):
     read_write_api_key = ID_WITH_VALID_LENGTH
     api_key = api_utils.get_ro_apikey()
@@ -89,7 +89,7 @@ def test_get_rw_apikey_if_ro_apikey_not_present(mock_get):
 
 
 def test_get_invalid_ro_apikey(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'get',
+    with patch.object(configparser.ConfigParser, 'get',
                       return_value=ID_WITH_INVALID_LENGTH):
         with pytest.raises(SystemExit):
             ro_api_key = api_utils.get_ro_apikey()
@@ -101,14 +101,14 @@ def test_get_invalid_ro_apikey(capsys):
 
 
 def test_get_valid_rw_apikey():
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
         rw_api_key = api_utils.get_rw_apikey()
 
         assert rw_api_key == ID_WITH_VALID_LENGTH
 
 
 def test_get_invalid_rw_apikey(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_INVALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_INVALID_LENGTH):
         with pytest.raises(SystemExit):
             api_utils.load_config = Mock()
             result = api_utils.get_rw_apikey()
@@ -120,14 +120,14 @@ def test_get_invalid_rw_apikey(capsys):
 
 
 def test_get_valid_owner_apikey():
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
         owner_api_key = api_utils.get_owner_apikey()
 
         assert owner_api_key == ID_WITH_VALID_LENGTH
 
 
 def test_get_invalid_owner_apikey(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'get',
+    with patch.object(configparser.ConfigParser, 'get',
                       return_value=ID_WITH_INVALID_LENGTH):
         with pytest.raises(SystemExit):
             api_utils.load_config = Mock()
@@ -140,14 +140,14 @@ def test_get_invalid_owner_apikey(capsys):
 
 
 def test_get_valid_owner_apikey_id():
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
         owner_api_key_id = api_utils.get_owner_apikey_id()
 
         assert owner_api_key_id == ID_WITH_VALID_LENGTH
 
 
 def test_get_invalid_owner_apikey_id(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_INVALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_INVALID_LENGTH):
         with pytest.raises(SystemExit):
             api_utils.load_config = Mock()
             result = api_utils.get_owner_apikey_id()
@@ -159,14 +159,14 @@ def test_get_invalid_owner_apikey_id(capsys):
 
 
 def test_get_valid_account_resource_id():
-    with patch.object(ConfigParser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
+    with patch.object(configparser.ConfigParser, 'get', return_value=ID_WITH_VALID_LENGTH):
         account_resource_id = api_utils.get_account_resource_id()
 
         assert account_resource_id == ID_WITH_VALID_LENGTH
 
 
 def test_get_invalid_account_resource_id(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'get',
+    with patch.object(configparser.ConfigParser, 'get',
                       return_value=ID_WITH_INVALID_LENGTH):
         with pytest.raises(SystemExit):
             result = api_utils.get_account_resource_id()
@@ -178,21 +178,21 @@ def test_get_invalid_account_resource_id(capsys):
 
 
 def test_get_valid_named_group_key():
-    with patch.object(ConfigParser.ConfigParser, 'items',
+    with patch.object(configparser.ConfigParser, 'items',
                       return_value=[('test-log-group-favs', ID_WITH_VALID_LENGTH)]):
         logkeys = api_utils.get_named_logkey_group('test-log-group-favs')
         assert logkeys == filter(None, ID_WITH_VALID_LENGTH.splitlines())
 
 
 def test_case_insensitivity_of_named_groups_key():
-    with patch.object(ConfigParser.ConfigParser, 'items',
+    with patch.object(configparser.ConfigParser, 'items',
                       return_value=[('test-log-group-favs', '')]):
         logkeys = api_utils.get_named_logkey_group('TEST-log-group-favs')
         assert logkeys == filter(None, ''.splitlines())
 
 
 def test_get_invalid_named_group_key(capsys):
-    with patch.object(ConfigParser.ConfigParser, 'items',
+    with patch.object(configparser.ConfigParser, 'items',
                       return_value=[('test-log-group-favs', ["test-log-key1", "test-log-key2"])]):
         with pytest.raises(SystemExit):
             nick_to_query = 'test-log-group-favs-invalid'
@@ -204,7 +204,7 @@ def test_get_invalid_named_group_key(capsys):
             assert 'was not found' in out
 
 
-@patch('ConfigParser.ConfigParser')
+@patch('configparser.ConfigParser')
 def test_replace_loggroup_section(mocked_configparser_class):
 
     config_dir = api_utils.user_config_dir(cli.lecli.__name__)

@@ -27,11 +27,11 @@ def _handle_get_usage_response(response):
     acc_name = response_json['name']
     acc_id = response_json['id']
 
-    print tabulate(sorted(daily_usage, key=lambda x: x['day']), headers='keys',
-                   tablefmt='pipe')
-    print "Total usage:\t%s" % total_usage
-    print "Account name:\t%s" % acc_name
-    print "Account ID:\t%s" % acc_id
+    print(tabulate(sorted(daily_usage, key=lambda x: x['day']), headers='keys',
+                   tablefmt='pipe'))
+    print("Total usage:\t%s" % total_usage)
+    print("Account name:\t%s" % acc_name)
+    print("Account ID:\t%s" % acc_id)
 
 
 def get_usage(start, end):

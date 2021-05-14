@@ -46,13 +46,13 @@ def handle_create_user_response(response):
 
     if response.status_code == 200:
         user = response.json()['user']
-        print 'Added user to account:\nName: %s %s \nLogin: %s \nEmail: %s \nUser Key: %s' % \
-              (user['first_name'], user['last_name'], user['login_name'], user['email'], user['id'])
+        print('Added user to account:\nName: %s %s \nLogin: %s \nEmail: %s \nUser Key: %s' % \
+              (user['first_name'], user['last_name'], user['login_name'], user['email'], user['id']))
 
     if response.status_code == 201:
         user = response.json()['user']
-        print 'Added user to account:\nName: %s %s \nLogin: %s \nEmail: %s \nUser Key: %s' % \
-              (user['first_name'], user['last_name'], user['login_name'], user['email'], user['id'])
+        print('Added user to account:\nName: %s %s \nLogin: %s \nEmail: %s \nUser Key: %s' % \
+              (user['first_name'], user['last_name'], user['login_name'], user['email'], user['id']))
 
     if response.status_code == 403:
         sys.stderr.write("User you attempted to add is the account owner")
@@ -124,7 +124,7 @@ def delete_user(user_key):
             sys.stderr.write('Delete user failed, status code: %s' % response.status_code)
             sys.exit(1)
         elif response.status_code == 204:
-            print 'Deleted user'
+            print('Deleted user')
     except requests.exceptions.RequestException as error:
         sys.stderr.write(error)
         sys.exit(1)
@@ -149,6 +149,6 @@ def print_users(response):
     Print users in the current account.
     """
     if 'users' in response.json():
-        print tabulate(response.json()['users'], headers={})
+        print(tabulate(response.json()['users'], headers={}))
     elif 'owners' in response.json():
-        print tabulate(response.json()['owners'], headers={})
+        print(tabulate(response.json()['owners'], headers={}))
